@@ -65,11 +65,17 @@ def main():
 
     # Fail-fast gate: re-assert the entry contract right before
     # writing, so a bad entry dies here instead of producing a
-    # file that would fail judging.
-    assert 1 <= len(ENTRY) <= 180, "entry must be 1-180 characters"
-    assert ENTRY == ENTRY.strip(), "entry must not have edge whitespace"
+    # file that would fail judging. Each message names the exact
+    # rule and the offending value, so a failure says what is
+    # wrong with the line rather than just which gate tripped.
+    assert 1 <= len(ENTRY) <= 180, (
+        "entry must be 1-180 characters, got %d" % len(ENTRY)
+    )
+    assert ENTRY == ENTRY.strip(), (
+        "entry must not have edge whitespace, got %r" % ENTRY
+    )
     assert "\n" not in ENTRY and "\r" not in ENTRY, (
-        "entry must be a single line"
+        "entry must be a single line, no line breaks allowed"
     )
 
     output_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
